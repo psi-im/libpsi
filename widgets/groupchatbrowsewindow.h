@@ -71,6 +71,7 @@ public:
 	virtual QObject *controller() const = 0;
 	virtual void setController(QObject *controller) = 0;
 
+	virtual void setGroupChatIcon(const QPixmap &icon) = 0;
 	virtual void setServer(const XMPP::Jid &roomServer) = 0;
 	virtual void setServerVisible(bool b) = 0;
 	virtual void setNicknameVisible(bool b) = 0;
@@ -83,6 +84,7 @@ signals:
 	void onCreateCancel(const XMPP::Jid &room); // no ack
 	void onCreateFinalize(const XMPP::Jid &room, bool join); // no-ack if join=false
 	void onDestroy(const XMPP::Jid &room);
+	void onSetAutoJoin(const QList<XMPP::Jid> &rooms, bool enabled);
 
 public slots:
 	// onBrowse
@@ -122,6 +124,7 @@ public:
 	// from qwidget
 	virtual void resizeEvent(QResizeEvent *event);
 
+	virtual void setGroupChatIcon(const QPixmap &icon);
 	virtual void setServer(const XMPP::Jid &roomServer);
 	virtual void setServerVisible(bool b);
 	virtual void setNicknameVisible(bool b);

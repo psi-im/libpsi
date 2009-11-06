@@ -43,17 +43,15 @@ class RoomModel : public QStandardItemModel
 
 public:
 	QList<GroupChatBrowseWindow::RoomInfo> list;
-	//QPixmap icon;
+	QPixmap icon;
 
 	RoomModel(QObject *parent = 0) :
 		QStandardItemModel(parent)
 	{
-		//icon = QPixmap("groupchat.png");
-		setColumnCount(1);
-
 		QStringList headers;
 		headers += tr("Groupchat name");
 		//headers += tr("Participants");
+		headers += tr("Auto-join");
 		setHorizontalHeaderLabels(headers);
 		//setSortRole(RoomItem::PositionRole);
 	}
@@ -64,9 +62,15 @@ public:
 		foreach(const GroupChatBrowseWindow::RoomInfo &info, alist)
 		{
 			QList<QStandardItem*> clist;
-			clist += new QStandardItem(/*icon*/ QPixmap(), info.roomName);
+			clist += new QStandardItem(icon, info.roomName);
 			clist[0]->setData(qVariantFromValue(info), RoomInfoRole);
 			//clist += new QStandardItem(QString::number(info.participants));
+			clist += new QStandardItem;
+			clist[1]->setCheckable(true);
+			if(info.autoJoin)
+				clist[1]->setCheckState(Qt::Checked);
+			clist[0]->setEditable(false);
+			clist[1]->setEditable(false);
 			appendRow(clist);
 		}
 	}
@@ -117,9 +121,12 @@ public:
 
 		ui.tv_rooms->setContextMenuPolicy(Qt::CustomContextMenu);
 		connect(ui.tv_rooms, SIGNAL(customContextMenuRequested(const QPoint &)), SLOT(rooms_contextMenuRequested(const QPoint &)));
+		connect(ui.tv_rooms, SIGNAL(activated(const QModelIndex &)), SLOT(rooms_activated(const QModelIndex &)));
 
 		connect(ui.tv_rooms->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), SLOT(rooms_selectionChanged(const QItemSelection &, const QItemSelection &)));
 		connect(ui.le_room, SIGNAL(textChanged(const QString &)), SLOT(room_textChanged(const QString &)));
+
+		connect(model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)), SLOT(model_dataChanged(const QModelIndex &, const QModelIndex &)));
 
 		connect(pb_create, SIGNAL(clicked()), SLOT(doCreate()));
 		connect(pb_join, SIGNAL(clicked()), SLOT(doJoin()));
@@ -186,6 +193,18 @@ public slots:
 		}
 	}
 
+	void rooms_activated(const QModelIndex &index)
+	{
+		XMPP::Jid room = model->list[index.row()].jid;
+
+		if(!room.isEmpty())
+		{
+			setWidgetsEnabled(false);
+
+			emit q->onJoin(room);
+		}
+	}
+
 	void room_textChanged(const QString &text)
 	{
 		Q_UNUSED(text);
@@ -198,10 +217,27 @@ public slots:
 			pb_join->setEnabled(false);
 	}
 
+	void model_dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+	{
+		Q_UNUSED(bottomRight);
+
+		QModelIndex index = topLeft;
+		QStandardItem *i = model->itemFromIndex(index);
+		bool isChecked = false;
+		if(i->checkState() == Qt::Checked)
+			isChecked = true;
+
+		bool previousState = model->list[index.row()].autoJoin;
+		model->list[index.row()].autoJoin = isChecked;
+
+		if(previousState != isChecked)
+			emit q->onSetAutoJoin(QList<XMPP::Jid>() << model->list[index.row()].jid, isChecked);
+	}
+
 	void doCreate()
 	{
 		QString room = QInputDialog::getText(q, tr("Create Groupchat"),
-			tr("Choose a name for the groupchat you want to create"));
+			tr("Choose a name for the groupchat you want to create:"));
 
 		if(!room.isEmpty())
 		{
@@ -277,7 +313,6 @@ PsiGroupChatBrowseWindow::~PsiGroupChatBrowseWindow()
 
 void PsiGroupChatBrowseWindow::resizeEvent(QResizeEvent *event)
 {
-	/*
 	//int sort_margin = d->ui.tv_rooms->header()->style()->pixelMetric(QStyle::PM_HeaderMargin);
 	int grip_width = d->ui.tv_rooms->header()->style()->pixelMetric(QStyle::PM_HeaderGripMargin);
 	int frame_width = d->ui.tv_rooms->frameWidth();
@@ -285,9 +320,10 @@ void PsiGroupChatBrowseWindow::resizeEvent(QResizeEvent *event)
 	grip_width *= 2; // HACK: this is certainly wrong, but some styles need extra pixel shifting
 	frame_width *= 2; // frame on left and right side
 	int widget_width = d->ui.tv_rooms->width();
-	int right_column_ideal = d->ui.tv_rooms->header()->sectionSizeHint(1);
+	//int right_column_ideal = qMax(d->ui.tv_rooms->header()->minimumSectionSize(), d->ui.tv_rooms->header()->sectionSizeHint(1));
+	int right_column_ideal = 132; //d->ui.tv_rooms->header()->sectionSizeHint(1);
 	int left_column_width = widget_width - right_column_ideal - grip_width - frame_width;
-	d->ui.tv_rooms->header()->resizeSection(0, left_column_width);*/
+	d->ui.tv_rooms->header()->resizeSection(0, left_column_width);
 	GroupChatBrowseWindow::resizeEvent(event);
 }
 
@@ -299,6 +335,11 @@ QObject *PsiGroupChatBrowseWindow::controller() const
 void PsiGroupChatBrowseWindow::setController(QObject *controller)
 {
 	d->controller = controller;
+}
+
+void PsiGroupChatBrowseWindow::setGroupChatIcon(const QPixmap &icon)
+{
+	d->model->icon = icon;
 }
 
 void PsiGroupChatBrowseWindow::setServer(const XMPP::Jid &roomServer)

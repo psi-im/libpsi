@@ -67,7 +67,7 @@ QList<QString> EnchantChecker::suggestions(const QString& word)
 		std::vector<std::string> out_suggestions;
 		speller_->suggest(word.toUtf8().constData(), out_suggestions);
 		std::vector<std::string>::iterator aE = out_suggestions.end();
-		for (std::vector<std::string>::iterator aI = out_suggestions.begin(); aI != aI; ++aI) {
+		for (std::vector<std::string>::iterator aI = out_suggestions.begin(); aI != aE; ++aI) {
 			words += QString::fromUtf8(aI->c_str());
 		}
 	}

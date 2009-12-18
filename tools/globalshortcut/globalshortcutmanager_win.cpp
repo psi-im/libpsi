@@ -64,8 +64,8 @@ public:
 
 private:
 	KeyTrigger* trigger_;
-	int id_;
-	static int nextId;
+	WPARAM id_;
+	static WPARAM nextId;
 
 private:
 	struct Qt_VK_Keymap
@@ -189,7 +189,7 @@ GlobalShortcutManager::KeyTrigger::Impl::qt_vk_table[] = {
 	{ Qt::Key_unknown,     0 },
 };
 
-int GlobalShortcutManager::KeyTrigger::Impl::nextId = 1;
+WPARAM GlobalShortcutManager::KeyTrigger::Impl::nextId = 1;
 
 GlobalShortcutManager::KeyTrigger::KeyTrigger(const QKeySequence& key)
 {

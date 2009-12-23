@@ -33,7 +33,8 @@ Q_DECLARE_METATYPE(GroupChatBrowseWindow::RoomInfo)
 
 enum Role
 {
-	RoomInfoRole = Qt::UserRole
+	RoomInfoRole = Qt::UserRole,
+	InternalRowRole
 };
 
 // TODO: handle duplicate rooms somehow
@@ -58,19 +59,24 @@ public:
 
 	void addRooms(const QList<GroupChatBrowseWindow::RoomInfo> &alist)
 	{
-		list += alist;
-		foreach(const GroupChatBrowseWindow::RoomInfo &info, alist)
+		for(int n = 0; n < alist.count(); ++n)
 		{
+			const GroupChatBrowseWindow::RoomInfo &info = alist[n];
+
 			QList<QStandardItem*> clist;
 			clist += new QStandardItem(icon, info.roomName);
+			clist[0]->setData(list.count(), InternalRowRole);
 			clist[0]->setData(qVariantFromValue(info), RoomInfoRole);
 			//clist += new QStandardItem(QString::number(info.participants));
 			clist += new QStandardItem;
+			clist[1]->setData(list.count(), InternalRowRole);
 			clist[1]->setCheckable(true);
 			if(info.autoJoin)
 				clist[1]->setCheckState(Qt::Checked);
 			clist[0]->setEditable(false);
 			clist[1]->setEditable(false);
+
+			list += info;
 			appendRow(clist);
 		}
 	}
@@ -79,6 +85,12 @@ public:
 	{
 		list.removeAt(at);
 		removeRow(at);
+	}
+
+	GroupChatBrowseWindow::RoomInfo & roomInfo(const QModelIndex &index)
+	{
+		QStandardItem *item = itemFromIndex(index);
+		return list[item->data(InternalRowRole).toInt()];
 	}
 };
 
@@ -188,14 +200,14 @@ public slots:
 				QModelIndex index = selected.indexes().first();
 				// ### async is bad
 				QMetaObject::invokeMethod(this, "destroyRoom", Qt::QueuedConnection,
-					Q_ARG(XMPP::Jid, model->list[index.row()].jid));
+					Q_ARG(XMPP::Jid, model->roomInfo(index).jid));
 			}
 		}
 	}
 
 	void rooms_activated(const QModelIndex &index)
 	{
-		XMPP::Jid room = model->list[index.row()].jid;
+		XMPP::Jid room = model->roomInfo(index).jid;
 
 		if(!room.isEmpty())
 		{
@@ -227,11 +239,11 @@ public slots:
 		if(i->checkState() == Qt::Checked)
 			isChecked = true;
 
-		bool previousState = model->list[index.row()].autoJoin;
-		model->list[index.row()].autoJoin = isChecked;
+		bool previousState = model->roomInfo(index).autoJoin;
+		model->roomInfo(index).autoJoin = isChecked;
 
 		if(previousState != isChecked)
-			emit q->onSetAutoJoin(QList<XMPP::Jid>() << model->list[index.row()].jid, isChecked);
+			emit q->onSetAutoJoin(QList<XMPP::Jid>() << model->roomInfo(index).jid, isChecked);
 	}
 
 	void doCreate()
@@ -267,7 +279,7 @@ public slots:
 				return;
 			QModelIndex index = selection.indexes().first();
 
-			room = model->list[index.row()].jid;
+			room = model->roomInfo(index).jid;
 		}
 
 		if(!room.isEmpty())

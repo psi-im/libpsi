@@ -3,4 +3,4 @@ DEPENDPATH  += $$PWD
 
 HEADERS += $$PWD/grepshortcutkeydialog.h
 SOURCES += $$PWD/grepshortcutkeydialog.cpp
-INTERFACES += $$PWD/grepshortcutkeydialog.ui
+FORMS += $$PWD/grepshortcutkeydialog.ui

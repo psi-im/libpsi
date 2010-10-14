@@ -1,5 +1,9 @@
 HEADERS += $$PWD/mac_dock.h
-SOURCES += $$PWD/mac_dock.cpp
+SOURCES += $$PWD/mac_dock.mm
 INCLUDEPATH += $$PWD
 DEPENDPATH  += $$PWD
-QMAKE_LFLAGS += -framework Carbon
+
+HEADERS += \
+	$$PWD/privateqt_mac.h
+SOURCES += \
+	$$PWD/privateqt_mac.mm

@@ -10,5 +10,9 @@ win32: {
 	SOURCES += $$PWD/globalshortcutmanager_win.cpp
 }
 mac: {
-	SOURCES += $$PWD/globalshortcutmanager_mac.cpp
+	SOURCES += \
+		$$PWD/globalshortcutmanager_mac.mm \
+		$$PWD/NDKeyboardLayout.m
+	HEADERS += \
+		$$PWD/NDKeyboardLayout.h
 }

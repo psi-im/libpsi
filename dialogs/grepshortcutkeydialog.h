@@ -36,12 +36,12 @@ public:
 
 	// reimplemented
 	void show();
-	void close();
 
 protected:
 	// reimplemented
 	void keyPressEvent(QKeyEvent* event);
 	void keyReleaseEvent(QKeyEvent* event);
+	void closeEvent(QCloseEvent *event);
 
 signals:
 	void newShortcutKey(const QKeySequence& key);

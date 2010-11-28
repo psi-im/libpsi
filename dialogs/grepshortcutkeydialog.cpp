@@ -34,17 +34,17 @@ GrepShortcutKeyDialog::GrepShortcutKeyDialog()
  */
 void GrepShortcutKeyDialog::show()
 {
-	grabKeyboard();
 	QDialog::show();
+	grabKeyboard();
 }
 
 /**
  * Releases the grabbed keyboard and proceeds with the default close() call.
  */
-void GrepShortcutKeyDialog::close()
+void GrepShortcutKeyDialog::closeEvent(QCloseEvent *event)
 {
-	QDialog::close();
 	releaseKeyboard();
+	event->accept();
 }
 
 void GrepShortcutKeyDialog::displayPressedKeys(const QKeySequence& keys)

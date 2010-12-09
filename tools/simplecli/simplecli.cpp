@@ -111,6 +111,10 @@ QMap<QString, QString> SimpleCli::parse(int argc, char* argv[], const QStringLis
 		} else if (left.startsWith('-')  ||  (left.startsWith('/') && winmode)) {
 			left = left.mid(1);
 			unnamedArgument = false;
+		} else if (n == 1 && left.startsWith("xmpp:")) {
+			unnamedArgument = false;
+			left = "uri";
+			right = str;
 		}
 
 		QString name, value;

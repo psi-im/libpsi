@@ -36,7 +36,7 @@ EnchantChecker::EnchantChecker() : speller_(NULL)
 	if (enchant::Broker *instance = enchant::Broker::instance())
 	{
 		std::string lang("en_US");
-		std::string probeLang = QLocale::languageToString(QLocale::system().language()).toStdString();
+		std::string probeLang = QLocale().name().section('_', 0, 0).toStdString();
 		if (instance->dict_exists(probeLang))
 			lang = probeLang;
 		try {

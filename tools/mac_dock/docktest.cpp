@@ -23,14 +23,14 @@
  *
  */
 
-#include <qapplication.h>
-#include <qmessagebox.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
+#include <QApplication>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QLayout>
 #include <QVBoxLayout>
-#include <qlineedit.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QLabel>
 
 #include "mac_dock.h"
 

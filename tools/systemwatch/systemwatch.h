@@ -21,7 +21,7 @@
 #ifndef SYSTEMWATCH_H
 #define SYSTEMWATCH_H
 
-#include <qobject.h>
+#include <QObject>
 
 class SystemWatch : public QObject
 {

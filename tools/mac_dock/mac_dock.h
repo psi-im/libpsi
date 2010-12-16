@@ -1,7 +1,7 @@
 #ifndef MACDOCK_H
 #define MACDOCK_H
 
-#include <qstring.h>
+#include <QString>
 
 class MacDock
 {

@@ -20,9 +20,9 @@
 
 #include "idle.h"
 
-#include <qcursor.h>
-#include <qdatetime.h>
-#include <qtimer.h>
+#include <QCursor>
+#include <QDateTime>
+#include <QTimer>
 
 static IdlePlatform *platform = 0;
 static int platform_ref = 0;

@@ -21,7 +21,7 @@
 #ifndef IDLE_H
 #define IDLE_H
 
-#include <qobject.h>
+#include <QObject>
 
 class IdlePlatform;
 

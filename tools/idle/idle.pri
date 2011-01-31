@@ -1,6 +1,5 @@
 HEADERS += $$PWD/idle.h
 SOURCES += $$PWD/idle.cpp
-INCLUDEPATH += $$PWD
 DEPENDPATH  += $$PWD
 
 unix:!mac {

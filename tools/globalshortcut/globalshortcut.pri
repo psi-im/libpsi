@@ -1,6 +1,5 @@
 HEADERS += $$PWD/globalshortcutmanager.h $$PWD/globalshortcuttrigger.h
 SOURCES += $$PWD/globalshortcutmanager.cpp
-INCLUDEPATH += $$PWD
 DEPENDPATH  += $$PWD
 
 unix:!mac {

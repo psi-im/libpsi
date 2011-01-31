@@ -1,6 +1,5 @@
 HEADERS += $$PWD/systemwatch.h
 SOURCES += $$PWD/systemwatch.cpp
-INCLUDEPATH += $$PWD
 DEPENDPATH  += $$PWD
 
 unix:!mac {

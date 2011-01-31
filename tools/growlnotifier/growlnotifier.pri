@@ -1,4 +1,3 @@
-INCLUDEPATH += $$PWD
 DEPENDPATH  += $$PWD
 
 HEADERS += $$PWD/growlnotifier.h

@@ -1,4 +1,3 @@
-INCLUDEPATH += $$PWD
 DEPENDPATH  += $$PWD
 
 HEADERS += $$PWD/spellchecker.h $$PWD/spellhighlighter.h

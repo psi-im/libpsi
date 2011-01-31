@@ -5,7 +5,6 @@ SOURCES += \
 	$$PWD/zip.cpp \
 	$$PWD/minizip/unzip.c
 
-INCLUDEPATH += $$PWD
 DEPENDPATH  += $$PWD
 
 win32: {

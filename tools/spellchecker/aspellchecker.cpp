@@ -39,9 +39,9 @@ ASpellChecker::ASpellChecker()
 	config_ = new_aspell_config();
 	aspell_config_replace(config_, "encoding", "utf-8");
 #ifdef Q_WS_WIN
-	aspell_config_replace(config_, "conf-dir", QDir::homePath());
-	aspell_config_replace(config_, "data-dir", QString("%1/aspell/data").arg(QCoreApplication::applicationDirPath()));
-	aspell_config_replace(config_, "dict-dir", QString("%1/aspell/dict").arg(QCoreApplication::applicationDirPath()));
+	aspell_config_replace(config_, "conf-dir", QDir::homePath().toLocal8Bit().data());
+	aspell_config_replace(config_, "data-dir", QString("%1/aspell/data").arg(QCoreApplication::applicationDirPath()).toLocal8Bit().data());
+	aspell_config_replace(config_, "dict-dir", QString("%1/aspell/dict").arg(QCoreApplication::applicationDirPath()).toLocal8Bit().data());
 #endif
 	AspellCanHaveError* ret = new_aspell_speller(config_);
 	if (aspell_error_number(ret) == 0) {

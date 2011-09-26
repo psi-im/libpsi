@@ -25,7 +25,7 @@
 #ifdef PSIMINIZIP
 #include "minizip/unzip.h"
 #else
-#include <minizip/unzip.h>
+#include <unzip.h>
 #endif
 #include "zip.h"
 

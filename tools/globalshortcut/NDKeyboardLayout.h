@@ -57,7 +57,13 @@ NSUInteger NDCarbonModifierFlagsForCocoaModifierFlags( NSUInteger modifierFlags 
 	@discussion The key code for each key character can change between hardware and with localisation, <tt>NDKeyboardLayout</tt> handles translation between key codes and key characters as well as for generating strings for display purposes.
 	@helps Used by <tt>NDHotKeyEvent</tt>.
  */
-@interface NDKeyboardLayout : NSObject
+@interface NDKeyboardLayout : NSObject {
+	CFDataRef keyboardLayoutData;
+	struct ReverseMappingEntry *mappings;
+	NSUInteger numberOfMappings;
+}
+
+@property(readonly, nonatomic) const UCKeyboardLayout *keyboardLayoutPtr;
 
 /*!
 	@method keyboardLayout

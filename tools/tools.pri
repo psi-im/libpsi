@@ -18,7 +18,9 @@ mac {
 
 HEADERS += \
 	$$PWD/maybe.h \
-	$$PWD/iodeviceopener.h
+	$$PWD/iodeviceopener.h \
+    libpsi/tools/x11info.h
 
 SOURCES += \
-	$$PWD/iodeviceopener.cpp
+	$$PWD/iodeviceopener.cpp \
+    libpsi/tools/x11info.cpp

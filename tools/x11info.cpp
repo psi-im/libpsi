@@ -32,6 +32,7 @@ unsigned long X11Info::appRootWindow(int screen)
 #endif
 }
 
+#ifdef HAVE_QT5
 xcb_connection_t *X11Info::xcbConnection()
 {
 	if (!_xcb) {
@@ -41,6 +42,8 @@ xcb_connection_t *X11Info::xcbConnection()
 	return _xcb;
 }
 
-Display* X11Info::_display = 0;
 xcb_connection_t* X11Info::_xcb = 0;
+#endif
+
+Display* X11Info::_display = 0;
 int X11Info::_xcbPreferredScreen = 0;

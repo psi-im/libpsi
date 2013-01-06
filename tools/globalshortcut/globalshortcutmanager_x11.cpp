@@ -43,7 +43,7 @@ class X11KeyTrigger
 public:
 	virtual ~X11KeyTrigger() {}
 	virtual void activate() = 0;
-	virtual bool isAccepted(int qkey) const = 0;
+	virtual bool isAccepted(const QKeySequence &qkey) const = 0;
 };
 
 class X11KeyTriggerManager : public QObject
@@ -77,19 +77,24 @@ protected:
 	bool eventFilter(QObject* o, QEvent* e)
 	{
 		if(e->type() == QEvent::KeyPress) {
-			QKeyEvent* k = static_cast<QKeyEvent*>(e);
-			int qkey = k->key();
-			if (k->modifiers() & Qt::ShiftModifier)
-				qkey |= Qt::SHIFT;
-			if (k->modifiers() & Qt::ControlModifier)
-				qkey |= Qt::CTRL;
-			if (k->modifiers() & Qt::AltModifier)
-				qkey |= Qt::ALT;
-			if (k->modifiers() & Qt::MetaModifier)
-				qkey |= Qt::META;
+			QKeyEvent* ke = static_cast<QKeyEvent*>(e);
+			int keys[5] = {0,0,0,0,0};
+			int n = 0;
+			int qkey = ke->key();
+			keys[n++] = qkey;
+			if (ke->modifiers() & Qt::ShiftModifier)
+				keys[n++] = Qt::SHIFT;
+			if (ke->modifiers() & Qt::ControlModifier)
+				keys[n++] = Qt::CTRL;
+			if (ke->modifiers() & Qt::AltModifier)
+				keys[n++] = Qt::ALT;
+			if (ke->modifiers() & Qt::MetaModifier)
+				keys[n++] = Qt::META;
+
+			QKeySequence ks(keys[0], keys[1], keys[2], keys[3]);
 
 			foreach(X11KeyTrigger* trigger, triggers_) {
-				if (trigger->isAccepted(qkey)) {
+				if (trigger->isAccepted(ks)) {
 					trigger->activate();
 					return true;
 				}
@@ -137,7 +142,7 @@ private:
 			int min_keycode, max_keycode, keysyms_per_keycode = 1;
 			XDisplayKeycodes (appDpy, &min_keycode, &max_keycode);
 			XFree(XGetKeyboardMapping (appDpy, min_keycode, (max_keycode - min_keycode + 1), &keysyms_per_keycode));
-			
+
 			int i, maskIndex = 0, mapIndex = 0;
 			for (maskIndex = 0; maskIndex < 8; maskIndex++) {
 				for (i = 0; i < map->max_keypermod; i++) {
@@ -147,7 +152,7 @@ private:
 						do {
 							sym = XKeycodeToKeysym(appDpy, map->modifiermap[mapIndex], symIndex);
 							symIndex++;
- 						} while ( !sym && symIndex < keysyms_per_keycode);
+						} while ( !sym && symIndex < keysyms_per_keycode);
 						if (alt_mask == 0 && (sym == XK_Alt_L || sym == XK_Alt_R)) {
 							alt_mask = 1 << maskIndex;
 						}
@@ -340,7 +345,7 @@ public:
 		emit trigger_->triggered();
 	}
 
-	bool isAccepted(int qkey) const
+	bool isAccepted(const QKeySequence &qkey) const
 	{
 		return qkey_ == qkey;
 	}

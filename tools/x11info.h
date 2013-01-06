@@ -9,7 +9,9 @@ typedef struct xcb_connection_t xcb_connection_t;
 class X11Info
 {
 	static Display *_display;
+#ifdef HAVE_QT5
 	static xcb_connection_t *_xcb;
+#endif
 	static int _xcbPreferredScreen;
 
 public:

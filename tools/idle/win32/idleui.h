@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////
-// 2000 Microsoft Systems Journal. 
+// 2000 Microsoft Systems Journal.
 // If this program works, it was written by Paul DiLascia.
 // If not, I don't know who wrote it.
 // This program compiles with Visual C++ 6.0 on Windows 98
@@ -17,7 +17,7 @@
 //   the current GetTickCount();
 //
 // See TestIdleUI.cpp for an example of how to use IdleUI
-// 
+//
 DLLIMPORT BOOL IdleUIInit();
 DLLIMPORT void IdleUITerm();
 DLLIMPORT DWORD IdleUIGetLastInputTime();

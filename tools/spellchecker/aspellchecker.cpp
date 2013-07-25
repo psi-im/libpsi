@@ -78,7 +78,7 @@ QList<QString> ASpellChecker::suggestions(const QString& word)
 {
 	QList<QString> words;
 	if (speller_) {
-		const AspellWordList* list = aspell_speller_suggest(speller_, word.toUtf8(), -1); 
+		const AspellWordList* list = aspell_speller_suggest(speller_, word.toUtf8(), -1);
 		AspellStringEnumeration* elements = aspell_word_list_elements(list);
 		const char *c_word;
 		while ((c_word = aspell_string_enumeration_next(elements)) != NULL) {

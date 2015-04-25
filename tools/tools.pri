@@ -22,8 +22,3 @@ HEADERS += \
 
 SOURCES += \
 	$$PWD/iodeviceopener.cpp
-
-unix:!mac {
-	HEADERS += $$PWD/x11info.h
-	SOURCES += $$PWD/x11info.cpp
-}

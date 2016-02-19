@@ -34,7 +34,7 @@
 #include <QCoreApplication>
 #include <QLocale>
 //#include <QDebug>
-#include <hunspell/hunspell.hxx>
+#include <hunspell.hxx>
 #ifdef Q_OS_WIN
 #include "applicationinfo.h"
 #endif
@@ -70,7 +70,9 @@ void HunspellChecker::getDictPaths()
 		dictPathSet << QLatin1String("/usr/share/myspell")
 			    << QLatin1String("/usr/share/hunspell")
 			    << QLatin1String("/usr/local/share/myspell")
-			    << QLatin1String("/usr/local/share/hunspell");
+			    << QLatin1String("/usr/local/share/hunspell")
+			    << QString("%1/.local/share/myspell").arg(QDir::home().absolutePath())
+			    << QString("%1/.local/share/hunspell").arg(QDir::home().absolutePath());
 #endif
 		dictPaths_ = dictPathSet.toList();
 	}

@@ -19,7 +19,42 @@
  */
 
 #include "systemwatch_unix.h"
+#ifdef USE_DBUS
+# include <QDBusConnection>
+#endif
 
 UnixSystemWatch::UnixSystemWatch()
 {
+#ifdef USE_DBUS
+	// TODO: check which service we should listen to
+	QDBusConnection conn = QDBusConnection::systemBus();
+	// listen to systemd's logind
+	// TODO: use delaying Inhibitor locks
+	conn.connect("org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", "PrepareForSleep", this, SLOT(prepareForSleep(bool)));
+	// listen to UPower
+	conn.connect("org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower", "Sleeping", this, SLOT(sleeping()));
+	conn.connect("org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower", "Resuming", this, SLOT(resuming()));
+#endif
+}
+
+void UnixSystemWatch::prepareForSleep(bool beforeSleep)
+{
+	if (beforeSleep)
+	{
+		emit sleep();
+	}
+	else
+	{
+		emit wakeup();
+	}
+}
+
+void UnixSystemWatch::sleeping()
+{
+	emit sleep();
+}
+
+void UnixSystemWatch::resuming()
+{
+	emit wakeup();
 }

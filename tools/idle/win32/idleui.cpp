@@ -77,10 +77,10 @@ DLLEXPORT DWORD IdleUIGetLastInputTime()
 //
 LRESULT CALLBACK keyboardHookCallback(int code, WPARAM wParam, LPARAM lParam)
 {
-	if (code == HC_ACTION)
+    if (code == HC_ACTION)
   {
     g_lastInputTick = GetTickCount();
-	}
+    }
   return ::CallNextHookEx(g_keyboardHook, code, wParam, lParam);
 }
 
@@ -89,7 +89,7 @@ LRESULT CALLBACK keyboardHookCallback(int code, WPARAM wParam, LPARAM lParam)
 //
 LRESULT CALLBACK mouseHookCallback(int code, WPARAM wParam, LPARAM lParam)
 {
-	if (code == HC_ACTION)
+    if (code == HC_ACTION)
   {
     // Update timestamp if event indicates mouse action
     bool change = false;
@@ -111,7 +111,7 @@ LRESULT CALLBACK mouseHookCallback(int code, WPARAM wParam, LPARAM lParam)
     {
       g_lastInputTick = GetTickCount();
     }
-	}
+    }
   return ::CallNextHookEx(g_mouseHook, code, wParam, lParam);
 }
 

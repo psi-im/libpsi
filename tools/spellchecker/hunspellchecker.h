@@ -33,6 +33,7 @@
 #include <QStringList>
 #include <QSharedPointer>
 #include "spellchecker.h"
+#include "languagemanager.h"
 
 class Hunspell;
 class QTextCodec;
@@ -49,11 +50,12 @@ public:
     virtual bool add(const QString &word);
     virtual bool available() const;
     virtual bool writable() const;
+    virtual void setActiveLanguages(const QSet<LanguageManager::LangId> &langs);
+    virtual QSet<LanguageManager::LangId> getAllLanguages() const;
 private:
     struct DictInfo
     {
-        QLocale::Language language;
-        QLocale::Country country;
+        LanguageManager::LangId langId;
         QString filename;
     };
     struct LangItem {
@@ -62,14 +64,14 @@ private:
         QTextCodec *codec;
     };
     void getSupportedLanguages();
-    void addLanguage(const QLocale &locale);
+    void addLanguage(const LanguageManager::LangId &langId);
     void getDictPaths();
     bool scanDictPaths(const QString &language, QFileInfo &aff , QFileInfo &dic);
-
+    void unloadLanguage(const LanguageManager::LangId &langId);
 private:
     QList<LangItem> languages_;
     QStringList dictPaths_;
-    QList<QLocale> supportedLangs_;
+    QSet<LanguageManager::LangId> supportedLangs_;
 };
 
 #endif // HUNSPELLCHECKER_H

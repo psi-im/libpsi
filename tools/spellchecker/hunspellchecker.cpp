@@ -33,11 +33,13 @@
 #include <QTextCodec>
 #include <QCoreApplication>
 #include <QLocale>
+#include <QMutableListIterator>
 //#include <QDebug>
 #include <hunspell.hxx>
 #ifdef Q_OS_WIN
 #include "applicationinfo.h"
 #endif
+#include "languagemanager.h"
 
 #ifdef H_DEPRECATED
 # define NEW_HUNSPELL
@@ -55,9 +57,6 @@ HunspellChecker::HunspellChecker()
 {
     getDictPaths();
     getSupportedLanguages();
-    foreach (const QLocale &locale, supportedLangs_) {
-        addLanguage(locale);
-    }
 }
 
 HunspellChecker::~HunspellChecker()
@@ -108,25 +107,25 @@ bool HunspellChecker::scanDictPaths(const QString &language, QFileInfo &aff , QF
 
 void HunspellChecker::getSupportedLanguages()
 {
-    QMap<QString,QLocale> retHash;
+    QSet<LanguageManager::LangId> retHash;
     foreach (const QString &dictPath, dictPaths_) {
         QDir dir(dictPath);
         if (!dir.exists()) {
             continue;
         }
         foreach (const QFileInfo &fi, dir.entryInfoList(QStringList() << "*.dic", QDir::Files)) {
-            QLocale locale(fi.baseName());
-            if (locale != QLocale::c())  {
-                retHash.insert(locale.nativeLanguageName()+locale.nativeCountryName(), locale);
+            auto id = LanguageManager::fromString(fi.baseName());
+            if (id.language) {
+                retHash.insert(id);
             }
         }
     }
-    supportedLangs_ = retHash.values();
+    supportedLangs_ = retHash;
 }
 
-void HunspellChecker::addLanguage(const QLocale &locale)
+void HunspellChecker::addLanguage(const LanguageManager::LangId &langId)
 {
-    QString language = locale.name();
+    QString language = LanguageManager::toString(langId).replace('-','_');
     QFileInfo aff, dic;
     if (scanDictPaths(language, aff, dic)) {
         LangItem li;
@@ -140,8 +139,7 @@ void HunspellChecker::addLanguage(const QLocale &locale)
         }
         li.codec = QTextCodec::codecForName(codecName);
         if (li.codec) {
-            li.info.language = locale.language();
-            li.info.country = locale.country();
+            li.info.langId = langId;
             li.info.filename = dic.filePath();
             languages_.append(li);
         } else {
@@ -180,7 +178,6 @@ bool HunspellChecker::isCorrect(const QString &word)
             return true;
         }
     }
-
     return false;
 }
 bool HunspellChecker::add(const QString& word)
@@ -207,4 +204,38 @@ bool HunspellChecker::available() const
 bool HunspellChecker::writable() const
 {
     return false;
+}
+
+void HunspellChecker::unloadLanguage(const LanguageManager::LangId &langId)
+{
+    QMutableListIterator<LangItem> it(languages_);
+    while(it.hasNext()) {
+        LangItem item = it.next();
+        if(item.info.langId == langId) {
+            it.remove();
+        }
+    }
+}
+
+QSet<LanguageManager::LangId> HunspellChecker::getAllLanguages() const
+{
+    return supportedLangs_;
+}
+
+void HunspellChecker::setActiveLanguages(const QSet<LanguageManager::LangId> &newLangs)
+{
+    QSet<LanguageManager::LangId> loadedLangs;
+    foreach (const LangItem &item, languages_) {
+        loadedLangs << item.info.langId;
+    }
+    QSet<LanguageManager::LangId> langsToUnload = loadedLangs - newLangs;
+    QSet<LanguageManager::LangId> langsToLoad = newLangs - loadedLangs;
+    QSetIterator<LanguageManager::LangId> it(langsToUnload);
+    while(it.hasNext()) {
+        unloadLanguage(it.next());
+    }
+    it = langsToLoad;
+    while(it.hasNext()) {
+        addLanguage(it.next());
+    }
 }

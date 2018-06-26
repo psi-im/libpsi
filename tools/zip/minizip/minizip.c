@@ -232,7 +232,7 @@ int isLargeFile(const char* filename)
     int n = FSEEKO_FUNC(pFile, 0, SEEK_END);
     pos = FTELLO_FUNC(pFile);
 
-                printf("File : %s is %lld bytes\n", filename, pos);
+                printf("File : %s is %llu bytes\n", filename, (unsigned long long)pos);
 
     if(pos >= 0xffffffff)
      largeFile = 1;

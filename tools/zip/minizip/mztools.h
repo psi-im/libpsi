@@ -7,15 +7,15 @@
 #ifndef _zip_tools_H
 #define _zip_tools_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "unzip.h"
 
 #ifndef _ZLIB_H
 #include "zlib.h"
 #endif
 
-#include "unzip.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Repair a ZIP file (missing central directory)
    file: file to recover
@@ -28,10 +28,8 @@ extern int ZEXPORT unzRepair(const char* file,
                              uLong* nRecovered,
                              uLong* bytesRecovered);
 
-
 #ifdef __cplusplus
 }
 #endif
 
-
-#endif
+#endif // _zip_tools_H

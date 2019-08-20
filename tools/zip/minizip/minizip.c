@@ -12,7 +12,6 @@
          Copyright (C) 2009-2010 Mathias Svensson ( http://result42.com )
 */
 
-
 #if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__))
         #ifndef __USE_FILE_OFFSET64
                 #define __USE_FILE_OFFSET64
@@ -39,33 +38,29 @@
 #define FSEEKO_FUNC(stream, offset, origin) fseeko64(stream, offset, origin)
 #endif
 
-
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <errno.h>
-#include <fcntl.h>
-
-#ifdef _WIN32
-# include <direct.h>
-# include <io.h>
-#else
-# include <unistd.h>
-# include <utime.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-#endif
-
-#include "zip.h"
-
 #ifdef _WIN32
         #define USEWIN32IOAPI
         #include "iowin32.h"
 #endif
 
+#include "zip.h"
 
+#include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#ifdef _WIN32
+# include <direct.h>
+# include <io.h>
+#else
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <unistd.h>
+# include <utime.h>
+#endif
 
 #define WRITEBUFFERSIZE (16384)
 #define MAXFILENAME (256)
@@ -146,9 +141,6 @@ uLong filetime(f, tmzip, dt)
 }
 #endif
 #endif
-
-
-
 
 int check_exist_file(filename)
     const char* filename;
@@ -258,7 +250,6 @@ int main(argc,argv)
     int size_buf=0;
     void* buf=NULL;
     const char* password=NULL;
-
 
     do_banner();
     if (argc==1)

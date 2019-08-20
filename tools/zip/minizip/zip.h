@@ -40,22 +40,21 @@
 #ifndef _zip12_H
 #define _zip12_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //#define HAVE_BZIP2
-
-#ifndef _ZLIB_H
-#include "zlib.h"
+#ifdef HAVE_BZIP2
+#include "bzlib.h"
 #endif
 
 #ifndef _ZLIBIOAPI_H
 #include "ioapi.h"
 #endif
 
-#ifdef HAVE_BZIP2
-#include "bzlib.h"
+#ifndef _ZLIB_H
+#include "zlib.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #define Z_BZIP2ED 12
@@ -107,7 +106,6 @@ typedef struct
 } zip_fileinfo;
 
 typedef const char* zipcharpc;
-
 
 #define APPEND_STATUS_CREATE        (0)
 #define APPEND_STATUS_CREATEAFTER   (1)
@@ -183,7 +181,6 @@ extern int ZEXPORT zipOpenNewFileInZip64 OF((zipFile file,
 
 */
 
-
 extern int ZEXPORT zipOpenNewFileInZip2 OF((zipFile file,
                                             const char* filename,
                                             const zip_fileinfo* zipfi,
@@ -195,7 +192,6 @@ extern int ZEXPORT zipOpenNewFileInZip2 OF((zipFile file,
                                             int method,
                                             int level,
                                             int raw));
-
 
 extern int ZEXPORT zipOpenNewFileInZip2_64 OF((zipFile file,
                                             const char* filename,
@@ -276,7 +272,6 @@ extern int ZEXPORT zipOpenNewFileInZip4 OF((zipFile file,
                                             uLong flagBase
                                             ));
 
-
 extern int ZEXPORT zipOpenNewFileInZip4_64 OF((zipFile file,
                                             const char* filename,
                                             const zip_fileinfo* zipfi,
@@ -302,7 +297,6 @@ extern int ZEXPORT zipOpenNewFileInZip4_64 OF((zipFile file,
     versionMadeBy : value for Version made by field
     flag : value for flag field (compression level info will be added)
  */
-
 
 extern int ZEXPORT zipWriteInFileInZip OF((zipFile file,
                        const void* buf,
@@ -336,7 +330,6 @@ extern int ZEXPORT zipClose OF((zipFile file,
   Close the zipfile
 */
 
-
 extern int ZEXPORT zipRemoveExtraInfoBlock OF((char* pData, int* dataLen, short sHeader));
 /*
   zipRemoveExtraInfoBlock -  Added by Mathias Svensson
@@ -359,4 +352,4 @@ extern int ZEXPORT zipRemoveExtraInfoBlock OF((char* pData, int* dataLen, short 
 }
 #endif
 
-#endif /* _zip64_H */
+#endif // _zip12_H

@@ -11,11 +11,12 @@
 
 */
 
-#include <stdlib.h>
-
-#include "zlib.h"
-#include "ioapi.h"
 #include "iowin32.h"
+
+#include "ioapi.h"
+#include "zlib.h"
+
+#include <stdlib.h>
 
 #ifndef INVALID_HANDLE_VALUE
 #define INVALID_HANDLE_VALUE (0xFFFFFFFF)
@@ -24,7 +25,6 @@
 #ifndef INVALID_SET_FILE_POINTER
 #define INVALID_SET_FILE_POINTER ((DWORD)-1)
 #endif
-
 
 // see Include/shared/winapifamily.h in the Windows Kit
 #if defined(WINAPI_FAMILY_PARTITION) && (!(defined(IOWIN32_USING_WINRT_API)))
@@ -46,7 +46,6 @@ typedef struct
     HANDLE hf;
     int error;
 } WIN32FILE_IOWIN;
-
 
 static void win32_translate_open_mode(int mode,
                                       DWORD* lpdwDesiredAccess,
@@ -102,17 +101,17 @@ voidpf ZCALLBACK win32_open64_file_func (voidpf opaque,const void* filename,int 
     win32_translate_open_mode(mode,&dwDesiredAccess,&dwCreationDisposition,&dwShareMode,&dwFlagsAndAttributes);
 
 #ifdef IOWIN32_USING_WINRT_API
-#ifdef UNICODE
+#    ifdef UNICODE
     if ((filename!=NULL) && (dwDesiredAccess != 0))
         hFile = CreateFile2((LPCTSTR)filename, dwDesiredAccess, dwShareMode, dwCreationDisposition, NULL);
-#else
+#    else
     if ((filename!=NULL) && (dwDesiredAccess != 0))
     {
         WCHAR filenameW[FILENAME_MAX + 0x200 + 1];
         MultiByteToWideChar(CP_ACP,0,(const char*)filename,-1,filenameW,FILENAME_MAX + 0x200);
         hFile = CreateFile2(filenameW, dwDesiredAccess, dwShareMode, dwCreationDisposition, NULL);
     }
-#endif
+#    endif
 #else
     if ((filename!=NULL) && (dwDesiredAccess != 0))
         hFile = CreateFile((LPCTSTR)filename, dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
@@ -120,7 +119,6 @@ voidpf ZCALLBACK win32_open64_file_func (voidpf opaque,const void* filename,int 
 
     return win32_build_iowin(hFile);
 }
-
 
 voidpf ZCALLBACK win32_open64_file_funcA (voidpf opaque,const void* filename,int mode)
 {
@@ -145,7 +143,6 @@ voidpf ZCALLBACK win32_open64_file_funcA (voidpf opaque,const void* filename,int
     return win32_build_iowin(hFile);
 }
 
-
 voidpf ZCALLBACK win32_open64_file_funcW (voidpf opaque,const void* filename,int mode)
 {
     const char* mode_fopen = NULL;
@@ -165,7 +162,6 @@ voidpf ZCALLBACK win32_open64_file_funcW (voidpf opaque,const void* filename,int
     return win32_build_iowin(hFile);
 }
 
-
 voidpf ZCALLBACK win32_open_file_func (voidpf opaque,const char* filename,int mode)
 {
     const char* mode_fopen = NULL;
@@ -175,17 +171,17 @@ voidpf ZCALLBACK win32_open_file_func (voidpf opaque,const char* filename,int mo
     win32_translate_open_mode(mode,&dwDesiredAccess,&dwCreationDisposition,&dwShareMode,&dwFlagsAndAttributes);
 
 #ifdef IOWIN32_USING_WINRT_API
-#ifdef UNICODE
+#    ifdef UNICODE
     if ((filename!=NULL) && (dwDesiredAccess != 0))
         hFile = CreateFile2((LPCTSTR)filename, dwDesiredAccess, dwShareMode, dwCreationDisposition, NULL);
-#else
+#    else
     if ((filename!=NULL) && (dwDesiredAccess != 0))
     {
         WCHAR filenameW[FILENAME_MAX + 0x200 + 1];
         MultiByteToWideChar(CP_ACP,0,(const char*)filename,-1,filenameW,FILENAME_MAX + 0x200);
         hFile = CreateFile2(filenameW, dwDesiredAccess, dwShareMode, dwCreationDisposition, NULL);
     }
-#endif
+#    endif
 #else
     if ((filename!=NULL) && (dwDesiredAccess != 0))
         hFile = CreateFile((LPCTSTR)filename, dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
@@ -193,7 +189,6 @@ voidpf ZCALLBACK win32_open_file_func (voidpf opaque,const char* filename,int mo
 
     return win32_build_iowin(hFile);
 }
-
 
 uLong ZCALLBACK win32_read_file_func (voidpf opaque, voidpf stream, void* buf,uLong size)
 {
@@ -215,7 +210,6 @@ uLong ZCALLBACK win32_read_file_func (voidpf opaque, voidpf stream, void* buf,uL
 
     return ret;
 }
-
 
 uLong ZCALLBACK win32_write_file_func (voidpf opaque,voidpf stream,const void* buf,uLong size)
 {
@@ -304,7 +298,6 @@ ZPOS64_T ZCALLBACK win32_tell64_file_func (voidpf opaque, voidpf stream)
     }
     return ret;
 }
-
 
 long ZCALLBACK win32_seek_file_func (voidpf opaque,voidpf stream,uLong offset,int origin)
 {
@@ -435,7 +428,6 @@ void fill_win32_filefunc64(zlib_filefunc64_def* pzlib_filefunc_def)
     pzlib_filefunc_def->opaque = NULL;
 }
 
-
 void fill_win32_filefunc64A(zlib_filefunc64_def* pzlib_filefunc_def)
 {
     pzlib_filefunc_def->zopen64_file = win32_open64_file_funcA;
@@ -447,7 +439,6 @@ void fill_win32_filefunc64A(zlib_filefunc64_def* pzlib_filefunc_def)
     pzlib_filefunc_def->zerror_file = win32_error_file_func;
     pzlib_filefunc_def->opaque = NULL;
 }
-
 
 void fill_win32_filefunc64W(zlib_filefunc64_def* pzlib_filefunc_def)
 {

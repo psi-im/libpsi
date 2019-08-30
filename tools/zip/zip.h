@@ -54,4 +54,4 @@ private:
     bool getList();
 };
 
-#endif
+#endif // CS_ZIP_H

@@ -7,9 +7,9 @@
 // See IdleUI.h
 //
 
+#include <assert.h>
 #include <windows.h>
 #include <winuser.h>
-#include <assert.h>
 
 #define DLLEXPORT __declspec(dllexport)
 

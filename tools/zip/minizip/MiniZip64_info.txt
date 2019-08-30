@@ -7,6 +7,7 @@ MiniZip 1.1 is built from MiniZip 1.0 by Gilles Vollant ( http://www.winimage.co
 When adding ZIP64 support into minizip it would result into risk of breaking compatibility with minizip 1.0.
 All possible work was done for compatibility.
 
+
 Background
 ---------------------
 When adding ZIP64 support Mathias Svensson found that Even Rouault have added ZIP64 
@@ -14,6 +15,7 @@ support for unzip.c into minizip for a open source project called gdal ( http://
 
 That was used as a starting point. And after that ZIP64 support was added to zip.c
 some refactoring and code cleanup was also done.
+
 
 Changed from MiniZip 1.0 to MiniZip 1.1
 ---------------------------------------
@@ -24,6 +26,7 @@ Changed from MiniZip 1.0 to MiniZip 1.1
 * Added unzip patch for BZIP Compression method (patch create by Daniel Borca)
 * Added BZIP Compress method for zip
 * Did some refactoring and code cleanup
+
 
 Credits
 
@@ -39,8 +42,10 @@ Credits
              Command line tool for Windows that shows the layout and information of the headers in a zip archive.
              Used when debugging and validating the creation of zip files using MiniZip64
 
+
  ZIP App Note  http://www.pkware.com/documents/casestudies/APPNOTE.TXT
                Zip File specification
+
 
 Notes.
  * To be able to use BZip compression method in zip64.c or unzip64.c the BZIP2 lib is needed and HAVE_BZIP2 need to be defined.

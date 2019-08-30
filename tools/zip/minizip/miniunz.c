@@ -38,19 +38,14 @@
 #define FSEEKO_FUNC(stream, offset, origin) fseeko64(stream, offset, origin)
 #endif
 
-#ifdef _WIN32
-#define USEWIN32IOAPI
-#include "iowin32.h"
-#endif
 
-#include "unzip.h"
-
-#include <errno.h>
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <errno.h>
+#include <fcntl.h>
+
 #ifdef _WIN32
 # include <direct.h>
 # include <io.h>
@@ -59,10 +54,17 @@
 # include <utime.h>
 #endif
 
+
+#include "unzip.h"
+
 #define CASESENSITIVITY (0)
 #define WRITEBUFFERSIZE (8192)
 #define MAXFILENAME (256)
 
+#ifdef _WIN32
+#define USEWIN32IOAPI
+#include "iowin32.h"
+#endif
 /*
   mini unzip, demo of unzip package
 
@@ -72,6 +74,7 @@
   list the file in the zipfile, and print the content of FILE_ID.ZIP or README.TXT
     if it exists
 */
+
 
 /* change_file_date : change the date/time of a file
     filename : the filename of the file where date/time must be modified
@@ -113,6 +116,7 @@ void change_file_date(filename,dosdate,tmu_date)
 #endif
 #endif
 }
+
 
 /* mymkdir and change_file_date are not 100 % portable
    As I don't know well Unix, I wait feedback for the unix portion */
@@ -304,6 +308,7 @@ int do_list(uf)
     return 0;
 }
 
+
 int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,password)
     unzFile uf;
     const int* popt_extract_without_path;
@@ -466,6 +471,7 @@ int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,password)
     return err;
 }
 
+
 int do_extract(uf,opt_extract_without_path,opt_overwrite,password)
     unzFile uf;
     int opt_extract_without_path;
@@ -523,6 +529,7 @@ int do_extract_onefile(uf,filename,opt_extract_without_path,opt_overwrite,passwo
     else
         return 1;
 }
+
 
 int main(argc,argv)
     int argc;

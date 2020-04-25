@@ -53,7 +53,7 @@ DLLEXPORT BOOL IdleUIInit() { return TRUE; }
 //////////////////
 // Terminate DLL: remove hooks.
 //
-DLLEXPORT void IdleUITerm() {}
+DLLEXPORT void IdleUITerm() { }
 
 /////////////////
 // Get tick count of last keyboard or mouse event

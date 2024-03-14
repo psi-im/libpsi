@@ -76,7 +76,7 @@ protected:
             if (k->modifiers() & Qt::MetaModifier)
                 qkey |= Qt::META;
 
-            for (X11KeyTrigger *trigger : qAsConst(triggers_)) {
+            for (X11KeyTrigger *trigger : std::as_const(triggers_)) {
                 if (trigger->isAccepted(QKeySequence(qkey))) {
                     trigger->activate();
                     return true;
@@ -318,7 +318,7 @@ public:
     {
         X11KeyTriggerManager::instance()->removeTrigger(this);
 
-        for (GrabbedKey key : qAsConst(grabbedKeys_))
+        for (GrabbedKey key : std::as_const(grabbedKeys_))
             XUngrabKey(QX11Info::display(), key.code, key.mod, QX11Info::appRootWindow());
     }
 

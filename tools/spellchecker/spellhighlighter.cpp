@@ -23,12 +23,12 @@ void SpellHighlighter::highlightBlock(const QString &text)
 
     // Iterate through all words
     QRegularExpressionMatch match;
-    int index = text.indexOf(expression, 0, &match);
+    int                     index = text.indexOf(expression, 0, &match);
     while (index >= 0) {
         int     length = match.capturedLength();
         QString word   = match.captured();
         if (!digit.match(word).hasMatch() && !SpellChecker::instance()->isCorrect(word))
             setFormat(index, length, tcf);
-        index = text.indexOf(expression, index + length);
+        index = text.indexOf(expression, index + length, &match);
     }
 }

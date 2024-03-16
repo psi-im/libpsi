@@ -4,8 +4,6 @@
 #include "spellchecker.h"
 #include <QRegularExpression>
 
-SpellHighlighter::SpellHighlighter(QTextDocument *d) : QSyntaxHighlighter(d) { }
-
 void SpellHighlighter::highlightBlock(const QString &text)
 {
     // Underline
